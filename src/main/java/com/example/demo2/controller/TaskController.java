@@ -2,12 +2,9 @@ package com.example.demo2.controller;
 
 import com.example.demo2.entity.Task;
 import com.example.demo2.service.TaskService;
+import com.example.demo2.datatransferobject.TaskRequest;
 import com.example.demo2.datatransferobject.TaskResponse;
 
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import jakarta.validation.Valid;
 /**
  * CONTROLLER CLASS: TaskController
  * 
@@ -19,9 +16,10 @@ import jakarta.validation.Valid;
  * - Controller gets the request and asks the database for tasks
  * - Controller returns the tasks as JSON
  */
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import jakarta.validation.Valid;
 
 @RestController  // Annotation that says: "I handle HTTP requests and return JSON responses"
 @RequestMapping("/tasks")  // The base URL for all methods in this class is "/tasks"
@@ -40,13 +38,13 @@ public class TaskController {
     }
 
     @PostMapping
-    public Task createTask(@Valid @RequestBody Task task) {
-        return taskService.createTask(task);
+    public TaskResponse createTask(@Valid @RequestBody TaskRequest request) {
+        return taskService.createTask(request);
     }
 
     @PutMapping("/{id}")
-    public Task updateTask(@PathVariable Long id, @Valid @RequestBody Task task) {        
-        return taskService.updateTask(id, task);
+    public TaskResponse updateTask(@PathVariable Long id, @Valid @RequestBody TaskRequest request) {        
+        return taskService.updateTask(id, request);
     }
 
     @DeleteMapping("/{id}")
