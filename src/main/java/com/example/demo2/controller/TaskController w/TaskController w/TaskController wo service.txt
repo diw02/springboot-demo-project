@@ -1,0 +1,55 @@
+package com.example.demo2.controller;
+
+import com.example.demo2.entity.Task;
+import com.example.demo2.repository.TaskRepository;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import jakarta.validation.Valid;
+/**
+ * CONTROLLER CLASS: TaskController
+ * 
+ * A Controller handles HTTP requests from the client (like your web browser or mobile app).
+ * When someone visits http://localhost:8080/tasks, this controller responds with data.
+ * 
+ * Think of it like a restaurant waiter:
+ * - Client asks: "Give me all tasks" (GET request to /tasks)
+ * - Controller gets the request and asks the database for tasks
+ * - Controller returns the tasks as JSON
+ */
+@RestController  // Annotation that says: "I handle HTTP requests and return JSON responses"
+@RequestMapping("/tasks")  // The base URL for all methods in this class is "/tasks"
+public class TaskController {
+    
+    // This is the "database helper" - we use it to query/save data to the database
+    private final TaskRepository taskRepository;
+    
+    /**
+     * DEPENDENCY INJECTION: Constructor
+     * Spring Boot automatically gives us taskRepository when creating this controller.
+     * This is called "dependency injection" - Spring provides what we need.
+     */
+    public TaskController(TaskRepository taskRepository) {
+        this.taskRepository = taskRepository;
+    }
+
+    /**
+     * API ENDPOINT: GET /tasks
+     * When a client sends a GET request to http://localhost:8080/tasks, this method runs.
+     * 
+     * @GetMapping = This method listens for GET requests (without /tasks because it's already in @RequestMapping)
+     * 
+     * Returns: A list of all tasks as JSON
+     * Example response: [{"id": 1, "title": "Buy milk", "description": "From the store"}, ...]
+     */
+    @GetMapping  // Listen for GET requests at /tasks
+    public List<Task> getAllTasks() {
+        // taskRepository.findAll() = Ask the database: "Give me ALL tasks"
+        return taskRepository.findAll();  // Return the list as JSON to the client
+    }
+
+    @PostMapping
+    public Task createTask(@Valid @RequestBody Task task) {
+        return taskRepository.save(task);
+    }
+}
